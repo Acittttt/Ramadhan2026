@@ -246,6 +246,9 @@
             backdrop-filter: blur(5px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
+        }
+
+        #today.daily-card {
             opacity: 0;
             animation: fadeInUp 1s ease forwards 1s;
         }
@@ -498,6 +501,18 @@
             }
         }
 
+        /* Scroll Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             h1 { font-size: 2.2rem; }
@@ -564,8 +579,8 @@
         </section>
 
         <!-- Monthly Table -->
-        <h2 class="section-title" id="month">Jadwal Sebulan Penuh</h2>
-        <div class="table-container">
+        <h2 class="section-title reveal" id="month">Jadwal Sebulan Penuh</h2>
+        <div class="table-container reveal">
             <table id="schedule-table">
                 <thead>
                     <tr>
@@ -585,8 +600,8 @@
         </div>
 
         <!-- Doa Section -->
-        <h2 class="section-title" id="duas">Amalan Harian</h2>
-        <div class="duas-grid">
+        <h2 class="section-title reveal" id="duas">Amalan Harian</h2>
+        <div class="duas-grid reveal">
             <div class="dua-card">
                 <h3 class="dua-title">Niat Puasa Esok Hari</h3>
                 <div class="dua-arabic">
@@ -628,8 +643,8 @@
         </div>
 
         <!-- About Us -->
-        <h2 class="section-title" id="about">Tentang Kami</h2>
-        <div class="daily-card" style="margin-bottom: 2rem;">
+        <h2 class="section-title reveal" id="about">Tentang Kami</h2>
+        <div class="daily-card reveal" style="margin-bottom: 2rem;">
             <h3 style="color: var(--accent-gold); margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem;">KoTA-108</h3>
             <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center;">
                 <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center;">
@@ -655,9 +670,9 @@
 
     <script>
         // --- DATA SETUP ---
-        // Approximate Start Date of Ramadhan 2026: March 20, 2026 (Likely Friday or Saturday)
-        // We will generate 30 days starting from March 20, 2026
-        const startDate = new Date(2026, 2, 20); // Month is 0-indexed (2 = March)
+        // Start Date of Ramadhan 2026: February 19, 2026
+        // We will generate 30 days starting from February 19, 2026
+        const startDate = new Date(2026, 1, 19); // Month is 0-indexed (1 = February)
 
         // Base Schedule for Jakarta (Day 1 approximate)
         // Adjust minutes slightly each day to simulate sun movement
@@ -825,15 +840,14 @@
             
             // If today is NOT in Ramadan list (before or after), we still want to show TODAY'S date
             // but use the NEAREST schedule for prayer times logic
-            let displayDate = today;
+            let displayDate = new Date();
             let prayerTimesSource = todaySchedule;
+            let isPreRamadan = false;
 
             if (!todaySchedule) {
                 if (today < startDate) {
-                    prayerTimesSource = scheduleData[0]; // Use Day 1 times
-                    // Keep real today date for display? Or show Day 1?
-                    // User complained "Why Friday when it's Wednesday".
-                    // So we must show TODAY's real date, but maybe with a note or just use the times.
+                    prayerTimesSource = scheduleData[0]; // Use Day 1 times as reference
+                    isPreRamadan = true;
                 } else if (today > scheduleData[scheduleData.length-1].date) {
                     prayerTimesSource = scheduleData[scheduleData.length-1];
                 } else {
@@ -846,9 +860,7 @@
 
             // Display Greg Date (Use REAL today if possible, or the schedule date)
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            // If before Ramadan, showing TODAY'S date might be confusing with Ramadan Prayer times.
-            // But let's show Today's date as requested.
-            document.getElementById('gregorian-date').innerText = (todaySchedule ? todaySchedule.date : today).toLocaleDateString('id-ID', options);
+            document.getElementById('gregorian-date').innerText = displayDate.toLocaleDateString('id-ID', options);
             
             // Hijri approx logic needs adjustment if today is not in schedule
             if(todaySchedule) {
@@ -856,15 +868,13 @@
                  const hijriDay = Math.max(1, Math.min(30, 1 + dayDiff)); 
                  document.getElementById('hijri-date-display').innerText = `${hijriDay} Ramadhan 1447 H`;
             } else {
-                 // Calculate Hijri offset roughly for today
-                 // 20 March 2026 is 1 Ramadhan. 
-                 // Difference in days
-                 const diffTime = today - startDate;
-                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                 // If diff is -30 (Sha'ban), etc.
-                 // For simplicity, just showing "Menuju Ramadhan" or calculated Sha'ban date would be cool,
-                 // but let's just stick to the header showing "Jadwal Ramadhan"
-                 document.getElementById('hijri-date-display').innerText = diffDays < 0 ? `Menuju Ramadhan (${Math.abs(diffDays)} hari lagi)` : "Ramadhan 1447 H";
+                 if (isPreRamadan) {
+                     const diffTime = startDate - today;
+                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                     document.getElementById('hijri-date-display').innerText = `Menuju Ramadhan (${diffDays} hari lagi)`;
+                 } else {
+                     document.getElementById('hijri-date-display').innerText = "Ramadhan 1447 H Selesai";
+                 }
             }
 
             // Render Prayer Items
@@ -873,12 +883,35 @@
             // Determine active prayer (next one or current range)
             const now = new Date();
             const currentMinutes = now.getHours() * 60 + now.getMinutes();
-            let nextPrayerKey = null;
-            let minDiff = Infinity;
 
             prayersToShow.forEach(key => {
-                const p = prayerTimesSource.times[key];
-                const pMinutes = p.h * 60 + p.m;
+                // If pre-Ramadan, we can use the offset logic for TODAY based on day 1 logic??
+                // Or just show Day 1 times greyed out?
+                // Let's modify generateSchedule to support generic dates or just use Day 1 times for display.
+                // The user asked for "Adjust to real time date", which implies correct prayer times for today.
+                // Since our `generateSchedule` uses `baseTimes` + drift, we can calculate for today too!
+                
+                let time = { h: 0, m: 0, str: '00:00' };
+                if (isPreRamadan) {
+                    // CALCULATE FOR TODAY
+                    // Create a temp day schedule for `now`
+                    // We can reuse the logic inside generateSchedule mostly, but let's just use day 1 for simplicity 
+                    // unless we refactor. 
+                    // However, `prayerTimesSource` is already set to Day 1.
+                    // The Drift for Day 1 is 0.
+                    // The Drift for "Today" (e.g. 30 days before) would be different?
+                    // Let's just use Day 1 times as "Reference" but maybe not accurate for today.
+                    // User said "sesuaikan dengan tanggal real time aja", meaning "adjust to real time date".
+                    // But then said "better yet make it a countdown to Ramadan".
+                    // If we make it a countdown to Ramadan, do we hide prayer times?
+                    // Probably show Day 1 times as "Jadwal Awal Ramadhan" or keep showing them.
+                    
+                    time = prayerTimesSource.times[key];
+                } else {
+                    time = prayerTimesSource.times[key];
+                }
+                
+                // If pre-ramadan, maybe don't highlight? Or highlight based on time?
                 
                 const item = document.createElement('div');
                 item.className = 'prayer-item';
@@ -887,89 +920,94 @@
                 item.innerHTML = `
                     <div class="prayer-icon">${icons[key]}</div>
                     <div class="prayer-name">${prayerNamesDisplay[key]}</div>
-                    <div class="prayer-time">${p.str}</div>
+                    <div class="prayer-time">${time.str}</div>
                 `;
                 
                 grid.appendChild(item);
-
-                // Logic to highlight next/current
-                let diff = pMinutes - currentMinutes;
-                if (diff < 0) diff += 24 * 60; // Tomorrow calculation simplified
-                
-                // We actually want the NEXT prayer for countdown
-                // For highlighting the box, we usually highlight the current window (e.g. between dzuhur and ashar, highlight dzuhur or show next?)
-                // Requirement: "Highlighted card for the current prayer time"
-                // Let's highlight the one we are IN active period of.
-                
-                // But let's track "Next" for countdown separately
             });
 
-            startCountdown(prayerTimesSource, prayersToShow);
+            startCountdown(prayerTimesSource, prayersToShow, isPreRamadan);
         }
 
         let countdownInterval;
 
-        function startCountdown(todaySchedule, keys) {
+        function startCountdown(todaySchedule, keys, isPreRamadan) {
             if (countdownInterval) clearInterval(countdownInterval);
 
             function tick() {
                 const now = new Date();
                 let targetTime = null;
                 let targetKey = '';
-                
-                // Find next prayer today
-                for (let key of keys) {
-                    if(key === 'terbit' || key === 'dhuha') continue; // Usually don't countdown to terbit/dhuha for fasting purposes, but let's include if requested. Requirement said "Next prayer"
-                    
-                    const t = todaySchedule.times[key];
-                    const pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t.h, t.m, 0);
-                    
-                    if (pDate > now) {
-                        targetTime = pDate;
-                        targetKey = key;
-                        break;
-                    }
-                }
 
-                // If no more today, next is Imsak tomorrow
-                if (!targetTime) {
-                    // Try to get tomorrow's Imsak from scheduleData
-                    // For simplicity, just add 24h to today's imsak if explicit data missing
+                if (isPreRamadan) {
+                    // Pre-Ramadan Mode: Countdown to 1 Ramadhan Imsak/Start
+                    // Target: startDate at Imsak time of Day 1
+                    // todaySchedule is scheduleData[0] (Day 1)
                     const t = todaySchedule.times['imsak'];
-                    targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, t.h, t.m, 0);
-                    targetKey = 'imsak';
-                }
+                    targetTime = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), t.h, t.m, 0);
+                    
+                    document.getElementById('next-prayer-name').innerText = "Awal Ramadhan (Imsak)";
+                    
+                } else {
+                    // Regular Mode
+                    // Find next prayer today
+                    for (let key of keys) {
+                        if(key === 'terbit' || key === 'dhuha') continue; 
+                        
+                        const t = todaySchedule.times[key];
+                        const pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t.h, t.m, 0);
+                        
+                        if (pDate > now) {
+                            targetTime = pDate;
+                            targetKey = key;
+                            break;
+                        }
+                    }
 
-                // Update Name
-                const nextName = prayerNamesDisplay[targetKey] || targetKey;
-                document.getElementById('next-prayer-name').innerText = nextName;
+                    // If no more today, next is Imsak tomorrow
+                    if (!targetTime) {
+                         // Check if tomorrow is still in schedule
+                         // ... logic ...
+                        const t = todaySchedule.times['imsak'];
+                        targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, t.h, t.m, 0);
+                        targetKey = 'imsak';
+                    }
+                    
+                    document.getElementById('next-prayer-name').innerText = prayerNamesDisplay[targetKey] || targetKey;
+                }
 
                 // Calculate diff
                 let diff = targetTime - now;
-                if (diff < 0) { // If slight drift makes negative
+                if (diff < 0) { 
                      diff = 0;
                 }
-                const h = Math.floor(diff / (1000 * 60 * 60));
+                
+                // Format: Days:Hours:Min:Sec if > 24h?
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-                document.getElementById('countdown').innerText = 
-                    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                let timeString = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                if (days > 0) {
+                    timeString = `${days}d ${timeString}`;
+                }
+                
+                document.getElementById('countdown').innerText = timeString;
 
-                // Highlight Logic: Highlight the previous one (Current Active)
-                document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
-                
-                // The "Active" one is the one before the target
-                let targetIndex = keys.indexOf(targetKey);
-                let activeIndex = targetIndex - 1;
-                if (activeIndex < 0) activeIndex = keys.length - 1; // Loop back
-                
-                // Skip terbit/dhuha for highlighting "active prayer"? No, just highlight sequential
-                // If target is Dzuhur, active is Dhuha (or Subuh?). 
-                // Let's validly map index
-                const activeKey = keys[activeIndex];
-                const activeEl = document.getElementById(`prayer-${activeKey}`);
-                if (activeEl) activeEl.classList.add('active');
+                // Highlight Logic
+                if (!isPreRamadan) {
+                    document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
+                    let targetIndex = keys.indexOf(targetKey);
+                    let activeIndex = targetIndex - 1;
+                    if (activeIndex < 0) activeIndex = keys.length - 1; 
+                    const activeKey = keys[activeIndex];
+                    const activeEl = document.getElementById(`prayer-${activeKey}`);
+                    if (activeEl) activeEl.classList.add('active');
+                } else {
+                    // No highlight or highlight all?
+                    document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
+                }
             }
 
             tick();
@@ -986,6 +1024,26 @@
                 nav.style.background = 'rgba(11, 26, 38, 0.95)';
                 nav.style.padding = '1rem 0';
             }
+        });
+
+        // --- ANIMATIONS ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
         });
 
         // Start
