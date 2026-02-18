@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Ramadhan 1447 H / 2026 M</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0b1a26; /* Deep Navy */
+            --secondary-bg: #112d3d; /* Lighter Navy */
+            --accent-gold: #C9A84C;
+            --accent-amber: #e6b85c;
+            --text-light: #f4f4f4;
+            --text-muted: #a0aab5;
+            --card-bg: rgba(17, 45, 61, 0.85);
+            --border-color: rgba(201, 168, 76, 0.2);
+            --success-color: #2e8b57;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* Islamic Geometric Pattern Background */
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.03) 0%, transparent 60%),
+                linear-gradient(30deg, #0b1a26 12%, transparent 12.5%, transparent 87%, #0b1a26 87.5%, #0b1a26),
+                linear-gradient(150deg, #0b1a26 12%, transparent 12.5%, transparent 87%, #0b1a26 87.5%, #0b1a26),
+                linear-gradient(30deg, #0b1a26 12%, transparent 12.5%, transparent 87%, #0b1a26 87.5%, #0b1a26),
+                linear-gradient(150deg, #0b1a26 12%, transparent 12.5%, transparent 87%, #0b1a26 87.5%, #0b1a26),
+                linear-gradient(60deg, rgba(201, 168, 76, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(201, 168, 76, 0.05) 75%, rgba(201, 168, 76, 0.05)),
+                linear-gradient(60deg, rgba(201, 168, 76, 0.05) 25%, transparent 25.5%, transparent 75%, rgba(201, 168, 76, 0.05) 75%, rgba(201, 168, 76, 0.05));
+            background-size: 80px 140px;
+            background-position: 0 0, 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(11, 26, 38, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        header {
+            padding-top: 120px;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-moon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 15px -15px 0 0 var(--accent-gold);
+            margin-bottom: 2rem;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-moon::after {
+            content: '★';
+            position: absolute;
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            top: -20px;
+            right: -10px;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-15deg); }
+            50% { transform: translateY(-15px) rotate(-15deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-gold);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.2s;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.4s;
+        }
+
+        .hijri-date {
+            font-family: var(--font-heading);
+            font-style: italic;
+            color: var(--accent-amber);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+        }
+
+        /* City Selector */
+        .city-selector-container {
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.8s;
+            position: relative;
+            z-index: 10;
+        }
+
+        select {
+            appearance: none;
+            background-color: var(--secondary-bg);
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 0.8rem 2.5rem 0.8rem 1.5rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            min-width: 200px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C9A84C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        select:hover, select:focus {
+            background-color: rgba(17, 45, 61, 1);
+            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Daily Card */
+        .daily-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1s;
+        }
+
+        .countdown-container {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        #next-prayer-name {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .countdown-timer {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        .current-date {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            justify-items: center;
+        }
+
+        .prayer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0.5rem;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prayer-item.active {
+            background: rgba(201, 168, 76, 0.15);
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .prayer-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 12px;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(201, 168, 76, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
+        }
+
+        .prayer-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prayer-name {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+
+        .prayer-time {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .prayer-item.active .prayer-name,
+        .prayer-item.active .prayer-time {
+            color: var(--text-light);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            margin: 4rem 0 2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '♦';
+            display: block;
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+            color: var(--accent-amber);
+            opacity: 0.6;
+        }
+
+        /* Monthly Table */
+        .table-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background-color: rgba(11, 26, 38, 0.95);
+            color: var(--accent-gold);
+            font-family: var(--font-heading);
+            font-weight: 600;
+            padding: 1.2rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            transition: background 0.2s;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        tr:hover {
+            background-color: rgba(201, 168, 76, 0.05);
+        }
+
+        tr.today-row {
+            background-color: rgba(201, 168, 76, 0.15);
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        tr.today-row td {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Dua Cards */
+        .duas-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .dua-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            flex: 1 1 300px;
+            max-width: 500px;
+        }
+
+        .dua-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .dua-title {
+            font-family: var(--font-heading);
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dua-arabic {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.8rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            direction: rtl;
+        }
+
+        .dua-latin {
+            font-style: italic;
+            color: var(--accent-amber);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .dua-meaning {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            background-color: rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .countdown-timer { font-size: 2.5rem; }
+            .prayer-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .nav-links { display: none; } /* Simplified for mobile */
+            .mobile-menu-btn { display: block; }
+            header { padding-top: 100px; min-height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>☪</span> Ramadhan 1447 H
+            </a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#today">Jadwal Hari Ini</a>
+                <a href="#month">Jadwal Bulanan</a>
+                <a href="#duas">Doa-Doa</a>
+                <a href="#about">Tentang Kami</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home">
+        <div class="hero-moon"></div>
+        <h1>Jadwal Ramadhan 2026</h1>
+        <div class="subtitle">Raih Berkah di Bulan Suci</div>
+        <div class="hijri-date" id="hijri-date-display">1 Ramadhan 1447 H</div>
+        
+        <div class="city-selector-container">
+            <select id="city-selector" onchange="updateCity()">
+                <option value="jakarta">Jakarta</option>
+                <option value="bandung">Bandung</option>
+                <option value="surabaya">Surabaya</option>
+                <option value="medan">Medan</option>
+                <option value="makassar">Makassar</option>
+                <option value="yogyakarta">Yogyakarta</option>
+                <option value="semarang">Semarang</option>
+                <option value="palembang">Palembang</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Daily Card -->
+        <section id="today" class="daily-card">
+            <div class="countdown-container">
+                <div class="countdown-label">Menuju <span id="next-prayer-name">Maghrib</span></div>
+                <div class="countdown-timer" id="countdown">00:00:00</div>
+                <div class="current-date" id="gregorian-date">Minggu, 22 Maret 2026</div>
+            </div>
+
+            <div class="prayer-grid" id="daily-grid">
+                <!-- Generated by JS -->
+            </div>
+        </section>
+
+        <!-- Monthly Table -->
+        <h2 class="section-title" id="month">Jadwal Sebulan Penuh</h2>
+        <div class="table-container">
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Tgl</th>
+                        <th>Imsak</th>
+                        <th>Subuh</th>
+                        <th>Dzuhur</th>
+                        <th>Ashar</th>
+                        <th>Maghrib</th>
+                        <th>Isya</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <!-- Javascript will populate this -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Doa Section -->
+        <h2 class="section-title" id="duas">Amalan Harian</h2>
+        <div class="duas-grid">
+            <div class="dua-card">
+                <h3 class="dua-title">Niat Puasa Esok Hari</h3>
+                <div class="dua-arabic">
+                    نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلّٰهِ تَعَالَى
+                </div>
+                <div class="dua-latin">
+                    "Nawaitu shauma ghadin 'an adaa'i fardhi syahri ramadhaana haadzihis sanati lillahi ta'aala."
+                </div>
+                <div class="dua-meaning">
+                    "Aku berniat puasa esok hari untuk menunaikan fardhu di bulan Ramadhan tahun ini, karena Allah Ta'ala."
+                </div>
+            </div>
+
+            <div class="dua-card">
+                <h3 class="dua-title">Doa Berbuka Puasa</h3>
+                <div class="dua-arabic">
+                    اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ وَبِكَ آمَنْتُ
+                </div>
+                <div class="dua-latin">
+                    "Allahumma laka shumtu wa 'ala rizqika afthartu wa bika aamantu."
+                </div>
+                <div class="dua-meaning">
+                    "Ya Allah, untuk-Mu aku berpuasa, dan dengan rezeki-Mu aku berbuka, dan kepada-Mu aku beriman."
+                </div>
+            </div>
+
+            <div class="dua-card">
+                <h3 class="dua-title">Niat Mandi Wajib</h3>
+                <div class="dua-arabic">
+                    نَوَيْتُ الْغُسْلَ لِرَفْعِ الْحَدَثِ الْأَكْبَرِ مِنَ الْجِنَابَةِ فَرْضًا لِلَّهِ تَعَالَى
+                </div>
+                <div class="dua-latin">
+                    "Nawaitul ghusla liraf'il hadatsil akbari minal janabati fardhan lillahi ta'ala."
+                </div>
+                <div class="dua-meaning">
+                    "Aku niat mandi untuk menghilangkan hadats besar dari janabah, fardhu karena Allah Ta'ala."
+                </div>
+            </div>
+        </div>
+
+        <!-- About Us -->
+        <h2 class="section-title" id="about">Tentang Kami</h2>
+        <div class="daily-card" style="margin-bottom: 2rem;">
+            <h3 style="color: var(--accent-gold); margin-bottom: 1.5rem; text-align: center; font-size: 1.8rem;">KoTA-108</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center;">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center;">
+                    <strong style="color: var(--accent-light); display: block; margin-bottom: 0.2rem;">Muhamad Wahyu Maulana</strong>
+                    <span style="color: var(--accent-amber); font-family: monospace;">231511019</span>
+                </div>
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center;">
+                    <strong style="color: var(--accent-light); display: block; margin-bottom: 0.2rem;">Naufal Hidayatul Fikri</strong>
+                    <span style="color: var(--accent-amber); font-family: monospace;">231511024</span>
+                </div>
+                <div style="padding: 1rem; width: 100%; max-width: 400px; text-align: center;">
+                    <strong style="color: var(--accent-light); display: block; margin-bottom: 0.2rem;">Rasyiid Raafi Shaban</strong>
+                    <span style="color: var(--accent-amber); font-family: monospace;">231511027</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ramadhan Kareem. Marhaban Ya Ramadhan.<br>Jadwal waktu sholat bersifat pendekatan (taqribi).</p>
+    </footer>
+
+    <script>
+        // --- DATA SETUP ---
+        // Approximate Start Date of Ramadhan 2026: March 20, 2026 (Likely Friday or Saturday)
+        // We will generate 30 days starting from March 20, 2026
+        const startDate = new Date(2026, 2, 20); // Month is 0-indexed (2 = March)
+
+        // Base Schedule for Jakarta (Day 1 approximate)
+        // Adjust minutes slightly each day to simulate sun movement
+        const baseTimes = {
+            imsak: {h: 4, m: 32},
+            subuh: {h: 4, m: 42}, // +10 mins from imsak
+            terbit: {h: 5, m: 54},
+            dhuha: {h: 6, m: 21},
+            dzuhur: {h: 12, m: 2}, // drifting slightly earlier
+            ashar: {h: 15, m: 12}, // drifting slightly earlier
+            maghrib: {h: 18, m: 5}, // drifting earlier
+            isya: {h: 19, m: 14} // drifting earlier
+        };
+
+        // City Offsets (in minutes) relative to Jakarta
+        const cities = {
+            jakarta: 0,
+            bandung: -3,    // Earlier
+            surabaya: -23,  // Earlier (East)
+            semarang: -14,  // Earlier
+            yogyakarta: -13,// Earlier
+            medan: 35,      // Later (West)
+            palembang: 8,   // Later
+            makassar: 24    // Later (Central time zone? No, Makassar is WITA +1h. 
+                            // Standard time: WIB is GMT+7, WITA GMT+8.
+                            // If Jakarta is 18:00 WIB, Makassar is 19:00 WITA.
+                            // But geographically, Makassar matches ~Surabaya longitude.
+                            // Let's simplified: If user selects Makassar, we display LOCAL time for Makassar.
+                            // Makassar is approx same longitude as Surabaya but +1 hour timezone.
+                            // So if Surabaya Maghrib is 17:40 WIB, Makassar is 18:40 WITA.
+                            // Jakarta (106E) vs Makassar (119E). Diff ~13 deg ~ 52 mins sun time earlier.
+                            // Timezone +60 mins later. Net: Sun sets ~8 mins later by clock?
+                            // Let's use simplified offsets for display purposes.
+            // Simplified logic: Time displayed is local time.
+        };
+
+        // Special handling for timezones not implemented for simplicity, assume offsets act on the base time directly.
+        // Corrections for major cities relative to Jakarta (WIB) base pattern
+        const cityCorrections = {
+            jakarta: 0,
+            bandung: 0, 
+            surabaya: -24, 
+            semarang: -14,
+            yogyakarta: -14,
+            medan: 35, // West, sun sets later
+            palembang: 8,
+            makassar: 25 // Roughly adjusted for WITA (displayed as local time)
+        };
+
+        let currentCity = 'jakarta';
+        let scheduleData = [];
+
+        function generateSchedule() {
+            scheduleData = [];
+            const offset = cityCorrections[currentCity];
+            
+            for (let i = 0; i < 30; i++) {
+                let dayDate = new Date(startDate);
+                dayDate.setDate(startDate.getDate() + i);
+                
+                // Drift calculations (approximate for March/April)
+                // Sunrises get later? No, usually slightly earlier or stable near equator.
+                // Sunsets get earlier in March/April in Southern Hemisphere (Jakarta).
+                // Let's apply a small drift: -30 seconds per day for Maghrib
+                
+                const drift = i * -0.5; // minutes
+                
+                let daySchedule = {
+                    day: i + 1,
+                    date: dayDate,
+                    times: {}
+                };
+
+                // Calculate times
+                for (let [key, time] of Object.entries(baseTimes)) {
+                    let totalMinutes = time.h * 60 + time.m + offset + drift;
+                    
+                    // Specific tweaks per prayer to prevent uniform shifting
+                    if (key === 'subuh' || key === 'imsak') totalMinutes += (i * 0.1); // Subuh stays relatively flat
+                    if (key === 'maghrib') totalMinutes -= (i * 0.3); // Maghrib gets earlier
+                    
+                    let h = Math.floor(totalMinutes / 60);
+                    let m = Math.floor(totalMinutes % 60);
+                    
+                    if(h >= 24) h -= 24;
+                    
+                    daySchedule.times[key] = {
+                        h: h,
+                        m: m,
+                        str: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+                    };
+                }
+                scheduleData.push(daySchedule);
+            }
+        }
+
+        function updateCity() {
+            const select = document.getElementById('city-selector');
+            currentCity = select.value;
+            generateSchedule();
+            renderTable();
+            updateDailyCard();
+        }
+
+        // --- RENDERING ---
+
+        const icons = {
+            imsak: '🌙',
+            subuh: '🌅',
+            terbit: '☀️',
+            dhuha: '🌤️',
+            dzuhur: '🌞',
+            ashar: '🌇',
+            maghrib: '🌆',
+            isya: '🌃'
+        };
+
+        const prayerNamesDisplay = {
+            imsak: 'Imsak',
+            subuh: 'Subuh',
+            terbit: 'Terbit',
+            dhuha: 'Dhuha',
+            dzuhur: 'Dzuhur',
+            ashar: 'Ashar',
+            maghrib: 'Maghrib',
+            isya: 'Isya'
+        };
+
+        function renderTable() {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = '';
+
+            const today = new Date();
+            const todayStr = today.toDateString();
+
+            scheduleData.forEach(day => {
+                const tr = document.createElement('tr');
+                const isToday = day.date.toDateString() === todayStr;
+                if (isToday) tr.classList.add('today-row');
+
+                const dateOpts = { day: 'numeric', month: 'short' };
+                const dateStr = day.date.toLocaleDateString('id-ID', dateOpts);
+
+                tr.innerHTML = `
+                    <td><strong>${day.day} Ram</strong> <span style="font-size:0.8em; color:var(--text-muted)">(${dateStr})</span></td>
+                    <td>${day.times.imsak.str}</td>
+                    <td>${day.times.subuh.str}</td>
+                    <td>${day.times.dzuhur.str}</td>
+                    <td>${day.times.ashar.str}</td>
+                    <td>${day.times.maghrib.str}</td>
+                    <td>${day.times.isya.str}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateDailyCard() {
+            const grid = document.getElementById('daily-grid');
+            grid.innerHTML = '';
+            
+            // Find today's schedule
+            const today = new Date();
+            // In a real app, we'd match exact date. For landing page demo, if outside range, show Day 1
+            let todaySchedule = scheduleData.find(d => d.date.toDateString() === today.toDateString());
+            if (!todaySchedule && today < startDate) todaySchedule = scheduleData[0];
+            if (!todaySchedule && today > scheduleData[scheduleData.length-1].date) todaySchedule = scheduleData[scheduleData.length-1];
+            if (!todaySchedule) todaySchedule = scheduleData[0]; // Fallback
+
+            // Display Greg Date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('gregorian-date').innerText = todaySchedule.date.toLocaleDateString('id-ID', options);
+            
+            // Hijri approx
+            // Simple assumption: Start date + difference
+            const dayDiff = Math.ceil((todaySchedule.date - startDate) / (1000 * 60 * 60 * 24));
+            const hijriDay = Math.max(1, Math.min(30, 1 + dayDiff)); 
+            document.getElementById('hijri-date-display').innerText = `${hijriDay} Ramadhan 1447 H`;
+
+            // Render Prayer Items
+            const prayersToShow = ['imsak', 'subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
+            
+            // Determine active prayer (next one or current range)
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            let nextPrayerKey = null;
+            let minDiff = Infinity;
+
+            prayersToShow.forEach(key => {
+                const p = todaySchedule.times[key];
+                const pMinutes = p.h * 60 + p.m;
+                
+                const item = document.createElement('div');
+                item.className = 'prayer-item';
+                item.id = `prayer-${key}`;
+                
+                item.innerHTML = `
+                    <div class="prayer-icon">${icons[key]}</div>
+                    <div class="prayer-name">${prayerNamesDisplay[key]}</div>
+                    <div class="prayer-time">${p.str}</div>
+                `;
+                
+                grid.appendChild(item);
+
+                // Logic to highlight next/current
+                let diff = pMinutes - currentMinutes;
+                if (diff < 0) diff += 24 * 60; // Tomorrow calculation simplified
+                
+                // We actually want the NEXT prayer for countdown
+                // For highlighting the box, we usually highlight the current window (e.g. between dzuhur and ashar, highlight dzuhur or show next?)
+                // Requirement: "Highlighted card for the current prayer time"
+                // Let's highlight the one we are IN active period of.
+                
+                // But let's track "Next" for countdown separately
+            });
+
+            startCountdown(todaySchedule, prayersToShow);
+        }
+
+        let countdownInterval;
+
+        function startCountdown(todaySchedule, keys) {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            function tick() {
+                const now = new Date();
+                let targetTime = null;
+                let targetKey = '';
+                
+                // Find next prayer today
+                for (let key of keys) {
+                    if(key === 'terbit' || key === 'dhuha') continue; // Usually don't countdown to terbit/dhuha for fasting purposes, but let's include if requested. Requirement said "Next prayer"
+                    
+                    const t = todaySchedule.times[key];
+                    const pDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), t.h, t.m, 0);
+                    
+                    if (pDate > now) {
+                        targetTime = pDate;
+                        targetKey = key;
+                        break;
+                    }
+                }
+
+                // If no more today, next is Imsak tomorrow
+                if (!targetTime) {
+                    // Try to get tomorrow's Imsak from scheduleData
+                    // For simplicity, just add 24h to today's imsak if explicit data missing
+                    const t = todaySchedule.times['imsak'];
+                    targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, t.h, t.m, 0);
+                    targetKey = 'imsak';
+                }
+
+                // Update Name
+                document.getElementById('next-prayer-name').innerText = prayerNamesDisplay[targetKey];
+
+                // Calculate diff
+                const diff = targetTime - now;
+                const h = Math.floor(diff / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').innerText = 
+                    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+                // Highlight Logic: Highlight the previous one (Current Active)
+                document.querySelectorAll('.prayer-item').forEach(el => el.classList.remove('active'));
+                
+                // The "Active" one is the one before the target
+                let targetIndex = keys.indexOf(targetKey);
+                let activeIndex = targetIndex - 1;
+                if (activeIndex < 0) activeIndex = keys.length - 1; // Loop back
+                
+                // Skip terbit/dhuha for highlighting "active prayer"? No, just highlight sequential
+                // If target is Dzuhur, active is Dhuha (or Subuh?). 
+                // Let's validly map index
+                const activeKey = keys[activeIndex];
+                const activeEl = document.getElementById(`prayer-${activeKey}`);
+                if (activeEl) activeEl.classList.add('active');
+            }
+
+            tick();
+            countdownInterval = setInterval(tick, 1000);
+        }
+
+        // Init
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(11, 26, 38, 0.98)';
+                nav.style.padding = '0.5rem 0';
+            } else {
+                nav.style.background = 'rgba(11, 26, 38, 0.95)';
+                nav.style.padding = '1rem 0';
+            }
+        });
+
+        // Start
+        generateSchedule();
+        renderTable();
+        updateDailyCard();
+
+    </script>
+</body>
+</html>
