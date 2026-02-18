@@ -822,19 +822,50 @@
             const today = new Date();
             // In a real app, we'd match exact date. For landing page demo, if outside range, show Day 1
             let todaySchedule = scheduleData.find(d => d.date.toDateString() === today.toDateString());
-            if (!todaySchedule && today < startDate) todaySchedule = scheduleData[0];
-            if (!todaySchedule && today > scheduleData[scheduleData.length-1].date) todaySchedule = scheduleData[scheduleData.length-1];
-            if (!todaySchedule) todaySchedule = scheduleData[0]; // Fallback
-
-            // Display Greg Date
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('gregorian-date').innerText = todaySchedule.date.toLocaleDateString('id-ID', options);
             
-            // Hijri approx
-            // Simple assumption: Start date + difference
-            const dayDiff = Math.ceil((todaySchedule.date - startDate) / (1000 * 60 * 60 * 24));
-            const hijriDay = Math.max(1, Math.min(30, 1 + dayDiff)); 
-            document.getElementById('hijri-date-display').innerText = `${hijriDay} Ramadhan 1447 H`;
+            // If today is NOT in Ramadan list (before or after), we still want to show TODAY'S date
+            // but use the NEAREST schedule for prayer times logic
+            let displayDate = today;
+            let prayerTimesSource = todaySchedule;
+
+            if (!todaySchedule) {
+                if (today < startDate) {
+                    prayerTimesSource = scheduleData[0]; // Use Day 1 times
+                    // Keep real today date for display? Or show Day 1?
+                    // User complained "Why Friday when it's Wednesday".
+                    // So we must show TODAY's real date, but maybe with a note or just use the times.
+                } else if (today > scheduleData[scheduleData.length-1].date) {
+                    prayerTimesSource = scheduleData[scheduleData.length-1];
+                } else {
+                    prayerTimesSource = scheduleData[0];
+                }
+            } else {
+                displayDate = todaySchedule.date;
+                prayerTimesSource = todaySchedule;
+            }
+
+            // Display Greg Date (Use REAL today if possible, or the schedule date)
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            // If before Ramadan, showing TODAY'S date might be confusing with Ramadan Prayer times.
+            // But let's show Today's date as requested.
+            document.getElementById('gregorian-date').innerText = (todaySchedule ? todaySchedule.date : today).toLocaleDateString('id-ID', options);
+            
+            // Hijri approx logic needs adjustment if today is not in schedule
+            if(todaySchedule) {
+                 const dayDiff = Math.ceil((todaySchedule.date - startDate) / (1000 * 60 * 60 * 24));
+                 const hijriDay = Math.max(1, Math.min(30, 1 + dayDiff)); 
+                 document.getElementById('hijri-date-display').innerText = `${hijriDay} Ramadhan 1447 H`;
+            } else {
+                 // Calculate Hijri offset roughly for today
+                 // 20 March 2026 is 1 Ramadhan. 
+                 // Difference in days
+                 const diffTime = today - startDate;
+                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                 // If diff is -30 (Sha'ban), etc.
+                 // For simplicity, just showing "Menuju Ramadhan" or calculated Sha'ban date would be cool,
+                 // but let's just stick to the header showing "Jadwal Ramadhan"
+                 document.getElementById('hijri-date-display').innerText = diffDays < 0 ? `Menuju Ramadhan (${Math.abs(diffDays)} hari lagi)` : "Ramadhan 1447 H";
+            }
 
             // Render Prayer Items
             const prayersToShow = ['imsak', 'subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
@@ -846,7 +877,7 @@
             let minDiff = Infinity;
 
             prayersToShow.forEach(key => {
-                const p = todaySchedule.times[key];
+                const p = prayerTimesSource.times[key];
                 const pMinutes = p.h * 60 + p.m;
                 
                 const item = document.createElement('div');
@@ -873,7 +904,7 @@
                 // But let's track "Next" for countdown separately
             });
 
-            startCountdown(todaySchedule, prayersToShow);
+            startCountdown(prayerTimesSource, prayersToShow);
         }
 
         let countdownInterval;
@@ -910,10 +941,14 @@
                 }
 
                 // Update Name
-                document.getElementById('next-prayer-name').innerText = prayerNamesDisplay[targetKey];
+                const nextName = prayerNamesDisplay[targetKey] || targetKey;
+                document.getElementById('next-prayer-name').innerText = nextName;
 
                 // Calculate diff
-                const diff = targetTime - now;
+                let diff = targetTime - now;
+                if (diff < 0) { // If slight drift makes negative
+                     diff = 0;
+                }
                 const h = Math.floor(diff / (1000 * 60 * 60));
                 const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((diff % (1000 * 60)) / 1000);
